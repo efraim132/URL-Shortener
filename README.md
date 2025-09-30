@@ -100,6 +100,3 @@ In GoLand:
 
 - Port 8080 already in use: either stop the other service or change the port in `main.go`.
 
----
-
-If you'd like, I can also add an example curl script, a small README badge, or a persistent store implementation (file/bolt/db) as a follow-up.
