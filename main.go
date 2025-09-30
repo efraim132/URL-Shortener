@@ -14,7 +14,7 @@ type entry struct {
 
 type store struct {
 	mutex sync.RWMutex
-	data  map[string]string // "/gh" -> "https://github.com"
+	data  map[string]string // "/gh" -> "https://github.com" Using a map instead of a struct so that we can easily search
 }
 
 var theWholeStore = &store{data: map[string]string{}}
@@ -31,7 +31,19 @@ func main() {
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
+// Return the HTML page with the form to create short URLs
+func uiHandler(writer http.ResponseWriter, request *http.Request) {
+	//TODO serve a real HTML page
+
+	writer.Header().Set("Content-Type", "text/html")
+	http.ServeFile(writer, request, "index.html")
+}
+
 func handleRedirect(writer http.ResponseWriter, request *http.Request) {
+	if request.Method == "GET" && request.URL.Path == "/" {
+		uiHandler(writer, request)
+		return
+	}
 	theWholeStore.mutex.RLock()
 	target, ok := theWholeStore.data[request.URL.Path]
 	theWholeStore.mutex.RUnlock()
